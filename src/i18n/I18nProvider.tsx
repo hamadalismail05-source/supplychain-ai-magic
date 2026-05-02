@@ -66,6 +66,8 @@ const en: Dict = {
   "sandbox.running": "Agent Processing…",
   "sandbox.toastSuccess": "Autonomous PO Drafted & Sent for Approval",
   "sandbox.toastError": "Couldn't draft PO. Please try again.",
+  "sandbox.resetSim": "Reset Simulation",
+  "sandbox.resetToast": "Simulation reset",
   "sandbox.reset": "Reset demo",
   "sandbox.savedChip": "Saved $14,200 · 0 surgery delay",
   "sandbox.hint": "Human-in-the-loop. Nothing is sent without approval.",
