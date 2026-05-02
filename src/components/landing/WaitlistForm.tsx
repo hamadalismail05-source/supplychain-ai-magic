@@ -3,13 +3,15 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n/I18nProvider";
+import { supabase } from "@/integrations/supabase/client";
 
-const emailSchema = z
+const phoneSchema = z
   .string()
   .trim()
-  .min(1, { message: "Email is required" })
-  .email({ message: "Enter a valid work email" })
-  .max(255, { message: "Email is too long" });
+  .min(1)
+  .max(20)
+  .regex(/^\+?[0-9\s\-()]{6,20}$/);
 
 type Props = {
   className?: string;
@@ -17,29 +19,42 @@ type Props = {
   buttonLabel?: string;
 };
 
-export const WaitlistForm = ({ className, size = "default", buttonLabel = "Join the Waitlist" }: Props) => {
-  const [email, setEmail] = useState("");
+export const WaitlistForm = ({ className, size = "default", buttonLabel }: Props) => {
+  const { t, lang } = useI18n();
+  const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const parsed = emailSchema.safeParse(email);
+    const trimmed = value.trim();
+    if (!trimmed) {
+      setError(t("form.error.required"));
+      return;
+    }
+    const parsed = phoneSchema.safeParse(trimmed);
     if (!parsed.success) {
-      setError(parsed.error.issues[0].message);
+      setError(t("form.error.invalid"));
       return;
     }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 700));
+    const { error: dbError } = await supabase
+      .from("waitlist")
+      .insert({ whatsapp_number: trimmed, locale: lang });
     setLoading(false);
-    setEmail("");
-    toast.success("You're on the list.", {
-      description: "We'll be in touch when your access is ready.",
+    if (dbError) {
+      setError(t("form.error.invalid"));
+      return;
+    }
+    setValue("");
+    toast.success(t("form.success"), {
+      description: t("form.success.desc"),
     });
   };
 
   const big = size === "lg";
+  const label = buttonLabel ?? t("form.submit");
 
   return (
     <form onSubmit={onSubmit} className={cn("w-full max-w-xl", className)} noValidate>
@@ -50,16 +65,17 @@ export const WaitlistForm = ({ className, size = "default", buttonLabel = "Join 
         )}
       >
         <input
-          type="email"
-          inputMode="email"
-          autoComplete="email"
-          placeholder="Enter your work email"
-          value={email}
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          dir="ltr"
+          placeholder={t("form.placeholder")}
+          value={value}
           onChange={(e) => {
-            setEmail(e.target.value);
+            setValue(e.target.value);
             if (error) setError(null);
           }}
-          aria-label="Work email"
+          aria-label={t("form.placeholder")}
           aria-invalid={!!error}
           className={cn(
             "flex-1 bg-transparent px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/80 focus:outline-none",
@@ -74,14 +90,12 @@ export const WaitlistForm = ({ className, size = "default", buttonLabel = "Join 
             big && "px-5 py-3 text-base"
           )}
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
-          {buttonLabel}
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4 rtl:rotate-180" />}
+          {label}
         </button>
       </div>
       {error && <p className="mt-2 pl-2 text-sm text-destructive">{error}</p>}
-      <p className="mt-2 pl-2 text-xs text-muted-foreground">
-        No spam. HIPAA-aware. Unsubscribe anytime.
-      </p>
+      <p className="mt-2 px-2 text-xs text-muted-foreground">{t("form.note")}</p>
     </form>
   );
 };

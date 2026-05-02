@@ -1,4 +1,7 @@
+import { useI18n } from "@/i18n/I18nProvider";
+
 export const RoiStrip = () => {
+  const { t } = useI18n();
   const items = [
     { k: "98%", v: "of supply-related delays prevented", sub: "Pilot cohort, 6 months" },
     { k: "11h", v: "saved per OR coordinator weekly", sub: "Less calls, fewer spreadsheets" },
@@ -8,12 +11,12 @@ export const RoiStrip = () => {
     <section id="roi" className="relative py-24 sm:py-32 border-t border-border bg-secondary/30">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-2xl">
-          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">ROI</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("roi.kicker")}</span>
           <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground text-balance">
-            Measurable from week one.
+            {t("roi.title")}
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            We instrument every resolution so finance, clinical leadership, and supply chain see the same numbers.
+            {t("roi.sub")}
           </p>
         </div>
 

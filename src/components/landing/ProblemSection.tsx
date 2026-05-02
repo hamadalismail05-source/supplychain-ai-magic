@@ -1,17 +1,18 @@
 import { AlertTriangle, Phone, Mail, FileSpreadsheet, CheckCircle2, Clock } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export const ProblemSection = () => {
+  const { t } = useI18n();
   return (
     <section id="how" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-2xl">
-          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">The Problem</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("problem.kicker")}</span>
           <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground text-balance">
-            The hidden cost of fragmented inventory.
+            {t("problem.title")}
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Every cancelled procedure begins the same way — a missing implant nobody knew was missing.
-            Manual workflows can't keep up with the volume or complexity of modern surgical care.
+            {t("problem.sub")}
           </p>
         </div>
 
@@ -20,11 +21,11 @@ export const ProblemSection = () => {
           <div className="relative rounded-2xl border border-border bg-card p-6 sm:p-8 overflow-hidden min-h-[420px]">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Today</div>
-                <div className="text-lg font-semibold text-foreground mt-1">Manual Inventory</div>
+                <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("problem.today")}</div>
+                <div className="text-lg font-semibold text-foreground mt-1">{t("problem.manual")}</div>
               </div>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-danger-soft px-2.5 py-1 text-xs font-medium text-danger">
-                <AlertTriangle className="h-3 w-3" /> Reactive
+                <AlertTriangle className="h-3 w-3" /> {t("problem.reactive")}
               </span>
             </div>
 
@@ -59,11 +60,11 @@ export const ProblemSection = () => {
           <div className="relative rounded-2xl border border-border bg-card p-6 sm:p-8 overflow-hidden min-h-[420px]">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">With The Oracle</div>
-                <div className="text-lg font-semibold text-foreground mt-1">Autonomous Resolution</div>
+                <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("problem.withOracle")}</div>
+                <div className="text-lg font-semibold text-foreground mt-1">{t("problem.autonomous")}</div>
               </div>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-1 text-xs font-medium text-success">
-                <Clock className="h-3 w-3" /> 72h ahead
+                <Clock className="h-3 w-3" /> {t("problem.ahead")}
               </span>
             </div>
 
@@ -84,8 +85,8 @@ export const ProblemSection = () => {
                 </div>
               ))}
               <div className="flex items-center justify-between rounded-lg bg-success-soft px-4 py-3 mt-2">
-                <span className="text-sm font-medium text-success">Surgery on schedule</span>
-                <span className="text-xs font-mono text-success">Saved $14,200</span>
+                <span className="text-sm font-medium text-success">{t("problem.onSchedule")}</span>
+                <span className="text-xs font-mono text-success" dir="ltr">{t("problem.saved")}</span>
               </div>
             </div>
           </div>

@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { cn } from "@/lib/utils";
-
-const links = [
-  { label: "How it Works", href: "#how" },
-  { label: "ROI", href: "#roi" },
-];
+import { useI18n } from "@/i18n/I18nProvider";
+import { LangToggle } from "./LangToggle";
 
 export const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
+  const links = [
+    { label: t("nav.how"), href: "#how" },
+    { label: t("nav.roi"), href: "#roi" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -49,11 +51,12 @@ export const Nav = () => {
         </nav>
 
         <div className="flex items-center gap-2">
+          <LangToggle />
           <button
             onClick={scrollToWaitlist}
             className="hidden sm:inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
           >
-            Join Waitlist
+            {t("nav.cta")}
           </button>
           <button
             className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-foreground"
@@ -82,7 +85,7 @@ export const Nav = () => {
               onClick={scrollToWaitlist}
               className="mt-1 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
             >
-              Join Waitlist
+              {t("nav.cta")}
             </button>
           </div>
         </div>
