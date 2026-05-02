@@ -89,7 +89,7 @@ const en: Dict = {
   "footer.security": "Security",
   "footer.waitlist": "Waitlist",
   "footer.rights": "All rights reserved.",
-  "footer.compliance": "Built in Saudi Arabia",
+  "footer.compliance": "Empowering surgical teams with Agentic AI.",
 };
 
 const ar: Dict = {
@@ -177,7 +177,7 @@ const ar: Dict = {
   "footer.security": "الأمان",
   "footer.waitlist": "قائمة الانتظار",
   "footer.rights": "جميع الحقوق محفوظة.",
-  "footer.compliance": "صُنع في السعودية",
+  "footer.compliance": "تمكين الفرق الجراحية بواسطة الذكاء الاصطناعي.",
 };
 
 const dicts: Record<Lang, Dict> = { en, ar };
