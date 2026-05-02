@@ -14,6 +14,96 @@ export type Database = {
   }
   public: {
     Tables: {
+      inventory_stock: {
+        Row: {
+          created_at: string
+          id: string
+          item_name: string
+          quantity: number
+          sku: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_name: string
+          quantity?: number
+          sku: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_name?: string
+          quantity?: number
+          sku?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      purchase_orders: {
+        Row: {
+          created_at: string
+          generated_for_sku: string
+          id: string
+          quantity_ordered: number
+          status: string
+          supplier: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          generated_for_sku: string
+          id?: string
+          quantity_ordered?: number
+          status?: string
+          supplier: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          generated_for_sku?: string
+          id?: string
+          quantity_ordered?: number
+          status?: string
+          supplier?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      surgical_schedule: {
+        Row: {
+          created_at: string
+          id: string
+          or_room: string
+          procedure_name: string
+          required_sku: string
+          status: string
+          surgeon_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          or_room: string
+          procedure_name: string
+          required_sku: string
+          status?: string
+          surgeon_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          or_room?: string
+          procedure_name?: string
+          required_sku?: string
+          status?: string
+          surgeon_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       waitlist: {
         Row: {
           created_at: string
