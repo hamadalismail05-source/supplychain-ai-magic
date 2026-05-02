@@ -3,7 +3,6 @@ import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n/I18nProvider";
-import { LangToggle } from "./LangToggle";
 
 export const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -51,7 +50,6 @@ export const Nav = () => {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LangToggle />
           <button
             onClick={scrollToWaitlist}
             className="hidden sm:inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
