@@ -99,17 +99,28 @@ const Dashboard = () => {
 
   const approve = async (id: string) => {
     setApprovingId(id);
-    const { error } = await supabase
+    const { data: po, error } = await supabase
       .from("purchase_orders")
       .update({ status: "Approved" })
-      .eq("id", id);
-    setApprovingId(null);
+      .eq("id", id)
+      .select("generated_for_sku")
+      .maybeSingle();
     if (error) {
+      setApprovingId(null);
       toast.error("Failed to approve order");
       return;
     }
-    toast.success("Purchase order approved & sent to supplier");
-    loadOrders();
+
+    const sku = po?.generated_for_sku ?? "SKU-7782";
+    await supabase
+      .from("surgical_schedule")
+      .update({ status: "Ready" })
+      .eq("or_room", "OR-4")
+      .eq("required_sku", sku);
+
+    setApprovingId(null);
+    toast.success("PO Approved & Sent to Supplier");
+    await Promise.all([loadOrders(), loadSchedule()]);
   };
 
   const criticalCount = useMemo(
@@ -129,9 +140,9 @@ const Dashboard = () => {
     <div className="min-h-screen bg-secondary/30 flex">
       {/* Sidebar */}
       <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-border bg-card">
-        <div className="h-16 flex items-center px-5 border-b border-border">
+        <Link to="/" className="h-16 flex items-center px-5 border-b border-border hover:bg-secondary/50 transition-colors">
           <Logo />
-        </div>
+        </Link>
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
