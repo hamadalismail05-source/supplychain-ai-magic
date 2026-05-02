@@ -89,7 +89,7 @@ const en: Dict = {
   "footer.security": "Security",
   "footer.waitlist": "Waitlist",
   "footer.rights": "All rights reserved.",
-  "footer.compliance": "SOC 2 Type II — in progress · HIPAA aligned",
+  "footer.compliance": "Built in Saudi Arabia",
 };
 
 const ar: Dict = {
@@ -177,7 +177,7 @@ const ar: Dict = {
   "footer.security": "الأمان",
   "footer.waitlist": "قائمة الانتظار",
   "footer.rights": "جميع الحقوق محفوظة.",
-  "footer.compliance": "SOC 2 Type II — قيد التنفيذ · متوافق مع HIPAA",
+  "footer.compliance": "صُنع في السعودية",
 };
 
 const dicts: Record<Lang, Dict> = { en, ar };
