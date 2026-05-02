@@ -47,11 +47,10 @@ export const Hero = () => {
             <WaitlistForm size="lg" />
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-muted-foreground">
-            <span className="uppercase tracking-wider">{t("hero.builtwith")}</span>
-            {["Mercy Health", "Northcrest Surgical", "Ridgeview Ortho", "St. Aurora", "Pinecrest"].map((n) => (
-              <span key={n} className="font-semibold text-muted-foreground/70">{n}</span>
-            ))}
+          <div className="mt-12 flex justify-center">
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">
+              {t("hero.builtwith")}
+            </span>
           </div>
         </div>
 
