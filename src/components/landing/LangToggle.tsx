@@ -8,26 +8,38 @@ export const LangToggle = ({ className }: { className?: string }) => {
       role="group"
       aria-label="Language"
       className={cn(
-        "inline-flex items-center rounded-full border border-border bg-card p-0.5 text-xs font-medium",
+        "inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs shadow-[0_2px_8px_-2px_rgba(15,23,42,0.12)] ring-1 ring-black/5",
         className
       )}
+      dir="ltr"
     >
-      {(["en", "ar"] as const).map((l) => (
-        <button
-          key={l}
-          type="button"
-          onClick={() => setLang(l)}
-          aria-pressed={lang === l}
-          className={cn(
-            "px-2.5 py-1 rounded-full transition-colors uppercase tracking-wider",
-            lang === l
-              ? "bg-foreground text-background"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          {l}
-        </button>
-      ))}
+      <button
+        type="button"
+        onClick={() => setLang("en")}
+        aria-pressed={lang === "en"}
+        className={cn(
+          "uppercase tracking-wider transition-colors",
+          lang === "en"
+            ? "font-semibold text-[#059669]"
+            : "font-medium text-slate-400 hover:text-slate-600"
+        )}
+      >
+        EN
+      </button>
+      <span className="text-slate-400 select-none" aria-hidden>|</span>
+      <button
+        type="button"
+        onClick={() => setLang("ar")}
+        aria-pressed={lang === "ar"}
+        className={cn(
+          "uppercase tracking-wider transition-colors",
+          lang === "ar"
+            ? "font-semibold text-[#059669]"
+            : "font-medium text-slate-400 hover:text-slate-600"
+        )}
+      >
+        AR
+      </button>
     </div>
   );
 };

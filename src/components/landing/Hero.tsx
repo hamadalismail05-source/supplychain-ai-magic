@@ -1,6 +1,7 @@
 import { ArrowUpRight, Activity, ShieldCheck, Sparkles } from "lucide-react";
 import { WaitlistForm } from "./WaitlistForm";
 import { useI18n } from "@/i18n/I18nProvider";
+import { LangToggle } from "./LangToggle";
 
 export const Hero = () => {
   const { t } = useI18n();
@@ -8,6 +9,8 @@ export const Hero = () => {
     <section id="top" className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
       <div className="absolute inset-0 grid-bg pointer-events-none opacity-60" aria-hidden />
       <div className="absolute inset-x-0 top-0 h-[420px] bg-gradient-to-b from-background via-background to-transparent pointer-events-none" aria-hidden />
+
+      <LangToggle className="absolute top-20 right-4 sm:right-6 z-40" />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center text-center">
