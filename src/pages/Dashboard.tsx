@@ -1,27 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
 import {
   Activity,
   AlertOctagon,
-  Bell,
-  Bot,
-  Boxes,
   CalendarDays,
   CheckCircle2,
-  ChevronRight,
-  LayoutDashboard,
   Loader2,
   PackageCheck,
-  Search,
-  Settings,
   ShieldAlert,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/landing/Logo";
 import { supabase } from "@/integrations/supabase/client";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 type ScheduleRow = {
   id: string;
@@ -40,14 +32,6 @@ type PendingOrder = {
   status: string;
   created_at: string;
 };
-
-const navItems = [
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "OR Schedule", to: "/dashboard?tab=schedule", icon: CalendarDays },
-  { label: "Inventory", to: "/dashboard?tab=inventory", icon: Boxes },
-  { label: "AI Agents", to: "/dashboard?tab=agents", icon: Bot },
-  { label: "Settings", to: "/dashboard?tab=settings", icon: Settings },
-];
 
 const statusStyle = (status: string) => {
   const s = status.toLowerCase();
@@ -138,7 +122,6 @@ const Dashboard = () => {
     toast.warning("PO Rejected. Alerting OR Coordinator for manual intervention.");
   };
 
-  const lockedModule = () => toast.info("This module is locked in the current Beta preview.");
 
   const criticalCount = useMemo(
     () => schedule.filter((r) => r.status.toLowerCase().includes("critical") || r.status.toLowerCase().includes("risk")).length,
