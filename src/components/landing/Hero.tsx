@@ -24,9 +24,15 @@ export const Hero = () => {
 
           <h1 id="waitlist" className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-foreground text-balance max-w-4xl leading-[1.05]">
             {t("hero.title.pre")}{" "}
-            <span className="relative whitespace-nowrap">
+            <span className="relative whitespace-nowrap inline-block rtl:pb-3">
               {t("hero.title.accent")}
-              <svg className="absolute -bottom-2 left-0 w-full" height="10" viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden>
+              <svg
+                className="absolute -bottom-2 rtl:-bottom-1 left-0 w-full"
+                height="10"
+                viewBox="0 0 200 10"
+                preserveAspectRatio="none"
+                aria-hidden
+              >
                 <path d="M2 7 Q 50 2, 100 5 T 198 6" fill="none" stroke="hsl(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </span>{" "}
