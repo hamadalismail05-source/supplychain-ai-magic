@@ -56,6 +56,7 @@ const Dashboard = () => {
   const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [hideFallback, setHideFallback] = useState(false);
 
   const loadSchedule = async () => {
     setLoadingSchedule(true);
@@ -119,6 +120,46 @@ const Dashboard = () => {
       return;
     }
     setPendingOrders((prev) => prev.filter((p) => p.id !== id));
+    toast.warning("PO Rejected. Alerting OR Coordinator for manual intervention.");
+  };
+
+  // Used when there's no real Drafted PO yet — performs a full simulated
+  // approve flow so the dashboard demo always works end-to-end.
+  const approveDemo = async () => {
+    setApprovingId("demo");
+    try {
+      // Insert + immediately approve a PO row
+      const { error: insertErr } = await supabase
+        .from("purchase_orders")
+        .insert({
+          generated_for_sku: "SKU-7782",
+          quantity_ordered: 3,
+          supplier: "Stryker",
+          status: "Approved",
+        });
+      if (insertErr) throw insertErr;
+
+      // Flip Dr. Patel's surgery to Ready
+      await supabase
+        .from("surgical_schedule")
+        .update({ status: "Ready" })
+        .eq("or_room", "OR-4")
+        .eq("required_sku", "SKU-7782");
+
+      toast.success("PO Approved & Sent to Supplier");
+      await Promise.all([loadOrders(), loadSchedule()]);
+    } catch {
+      toast.error("Failed to approve order");
+    } finally {
+      setApprovingId(null);
+    }
+  };
+
+  const rejectDemo = async () => {
+    setApprovingId("demo");
+    // Hide the card locally
+    setHideFallback(true);
+    setApprovingId(null);
     toast.warning("PO Rejected. Alerting OR Coordinator for manual intervention.");
   };
 
@@ -251,16 +292,23 @@ const Dashboard = () => {
 
             <div className="p-5 space-y-3">
               {fallbackPending ? (
-                <ApprovalCard
-                  title="Titanium Femoral Stem · Size 12"
-                  sku="SKU-7782"
-                  qty={3}
-                  supplier="Stryker"
-                  reason="Required by Dr. Patel · OR-4 · Total Hip Arthroplasty"
-                  pending
-                  disabled
-                  onApprove={() => toast.message("Run the simulation on the landing page to draft a PO")}
-                />
+                hideFallback ? (
+                  <div className="rounded-lg border border-dashed border-border bg-background p-6 text-center text-sm text-muted-foreground">
+                    No drafted orders awaiting review.
+                  </div>
+                ) : (
+                  <ApprovalCard
+                    title="Titanium Femoral Stem · Size 12"
+                    sku="SKU-7782"
+                    qty={3}
+                    supplier="Stryker"
+                    reason="Required by Dr. Patel · OR-4 · Total Hip Arthroplasty"
+                    pending
+                    loading={approvingId === "demo"}
+                    onApprove={approveDemo}
+                    onReject={rejectDemo}
+                  />
+                )
               ) : (
                 pendingOrders.map((po) => (
                   <ApprovalCard
