@@ -56,6 +56,7 @@ const Dashboard = () => {
   const [pendingOrders, setPendingOrders] = useState<PendingOrder[]>([]);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
   const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [hideFallback, setHideFallback] = useState(false);
 
   const loadSchedule = async () => {
     setLoadingSchedule(true);
@@ -128,16 +129,14 @@ const Dashboard = () => {
     setApprovingId("demo");
     try {
       // Insert + immediately approve a PO row
-      const { data: inserted, error: insertErr } = await supabase
+      const { error: insertErr } = await supabase
         .from("purchase_orders")
         .insert({
           generated_for_sku: "SKU-7782",
           quantity_ordered: 3,
           supplier: "Stryker",
           status: "Approved",
-        })
-        .select("id")
-        .maybeSingle();
+        });
       if (insertErr) throw insertErr;
 
       // Flip Dr. Patel's surgery to Ready
@@ -177,7 +176,6 @@ const Dashboard = () => {
   }, [schedule, criticalCount]);
 
   const fallbackPending = pendingOrders.length === 0;
-  const [hideFallback, setHideFallback] = useState(false);
 
   return (
     <DashboardLayout alertCount={criticalCount}>
