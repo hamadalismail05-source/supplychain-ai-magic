@@ -141,7 +141,7 @@ const Dashboard = () => {
       {/* Sidebar */}
       <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-border bg-card">
         <Link to="/" className="h-16 flex items-center px-5 border-b border-border hover:bg-secondary/50 transition-colors">
-          <Logo />
+          <Logo asLink={false} />
         </Link>
         <nav className="flex-1 p-3 space-y-1">
           {navItems.map((item) => {
