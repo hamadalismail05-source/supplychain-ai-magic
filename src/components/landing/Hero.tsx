@@ -1,7 +1,9 @@
 import { ArrowUpRight, Activity, ShieldCheck, Sparkles } from "lucide-react";
 import { WaitlistForm } from "./WaitlistForm";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export const Hero = () => {
+  const { t } = useI18n();
   return (
     <section id="top" className="relative pt-32 pb-20 sm:pt-40 sm:pb-28 overflow-hidden">
       <div className="absolute inset-0 grid-bg pointer-events-none opacity-60" aria-hidden />
@@ -14,23 +16,22 @@ export const Hero = () => {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
             </span>
-            Now in private beta · Q3 2026
+            {t("hero.badge")}
           </span>
 
           <h1 id="waitlist" className="mt-6 text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight text-foreground text-balance max-w-4xl leading-[1.05]">
-            Agentic AI for the Modern{" "}
+            {t("hero.title.pre")}{" "}
             <span className="relative whitespace-nowrap">
-              Surgical
+              {t("hero.title.accent")}
               <svg className="absolute -bottom-2 left-0 w-full" height="10" viewBox="0 0 200 10" preserveAspectRatio="none" aria-hidden>
                 <path d="M2 7 Q 50 2, 100 5 T 198 6" fill="none" stroke="hsl(var(--foreground))" strokeWidth="2" strokeLinecap="round" />
               </svg>
             </span>{" "}
-            Supply Chain.
+            {t("hero.title.post")}
           </h1>
 
           <p className="mt-6 max-w-2xl text-base sm:text-lg text-muted-foreground text-balance leading-relaxed">
-            Bridge the gap between your OR schedule and your inventory. Predict shortages,
-            automate procurement, and never cancel a surgery due to a missing implant again.
+            {t("hero.sub")}
           </p>
 
           <div className="mt-8 w-full flex justify-center">
@@ -38,7 +39,7 @@ export const Hero = () => {
           </div>
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs text-muted-foreground">
-            <span className="uppercase tracking-wider">Built with clinicians from</span>
+            <span className="uppercase tracking-wider">{t("hero.builtwith")}</span>
             {["Mercy Health", "Northcrest Surgical", "Ridgeview Ortho", "St. Aurora", "Pinecrest"].map((n) => (
               <span key={n} className="font-semibold text-muted-foreground/70">{n}</span>
             ))}
@@ -55,15 +56,15 @@ export const Hero = () => {
                 <span className="h-2.5 w-2.5 rounded-full bg-border" />
                 <span className="h-2.5 w-2.5 rounded-full bg-border" />
               </div>
-              <div className="ml-3 text-xs text-muted-foreground">oracle.app · Today's OR Schedule</div>
+              <div className="ms-3 text-xs text-muted-foreground" dir="ltr">{t("hero.mock.title")}</div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-border">
               <aside className="md:col-span-3 p-5 space-y-4">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Today</div>
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{t("hero.mock.today")}</div>
                 {[
-                  { i: Activity, l: "OR Schedule", a: true },
-                  { i: ShieldCheck, l: "Risk Engine" },
-                  { i: Sparkles, l: "Agents" },
+                  { i: Activity, l: t("hero.mock.schedule"), a: true },
+                  { i: ShieldCheck, l: t("hero.mock.risk"), a: false },
+                  { i: Sparkles, l: t("hero.mock.agents"), a: false },
                 ].map(({ i: I, l, a }) => (
                   <div key={l} className={`flex items-center gap-2 text-sm ${a ? "text-foreground font-medium" : "text-muted-foreground"}`}>
                     <I className="h-4 w-4" /> {l}
@@ -86,17 +87,17 @@ export const Hero = () => {
                     </div>
                     {row.status === "ok" && (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-medium text-success">
-                        <span className="h-1.5 w-1.5 rounded-full bg-success" /> Ready
+                        <span className="h-1.5 w-1.5 rounded-full bg-success" /> {t("status.ready")}
                       </span>
                     )}
                     {row.status === "warn" && (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                        <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" /> Reviewing
+                        <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground" /> {t("status.reviewing")}
                       </span>
                     )}
                     {row.status === "risk" && (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-danger-soft px-2.5 py-0.5 text-xs font-medium text-danger">
-                        <span className="h-1.5 w-1.5 rounded-full bg-danger animate-pulse" /> Critical Risk
+                        <span className="h-1.5 w-1.5 rounded-full bg-danger animate-pulse" /> {t("status.criticalRisk")}
                         <ArrowUpRight className="h-3 w-3" />
                       </span>
                     )}

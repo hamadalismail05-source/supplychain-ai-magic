@@ -1,16 +1,18 @@
 import { Calendar, FileText, LineChart, Activity } from "lucide-react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export const FeaturesBento = () => {
+  const { t } = useI18n();
   return (
     <section className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="max-w-2xl">
-          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Platform</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("features.kicker")}</span>
           <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground text-balance">
-            One agent. Three pillars.
+            {t("features.title")}
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            Built around the actual workflow of perioperative teams — not generic supply chain dashboards.
+            {t("features.sub")}
           </p>
         </div>
 
@@ -23,9 +25,9 @@ export const FeaturesBento = () => {
               </div>
               <span className="text-xs text-muted-foreground">01</span>
             </div>
-            <h3 className="mt-6 text-2xl font-semibold tracking-tight text-foreground">Real-Time EHR Sync</h3>
+            <h3 className="mt-6 text-2xl font-semibold tracking-tight text-foreground">{t("features.ehr.title")}</h3>
             <p className="mt-2 text-muted-foreground max-w-md">
-              Connects directly to your surgery scheduling system — Epic, Cerner, Meditech — and mirrors changes the moment they happen.
+              {t("features.ehr.desc")}
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-4">
@@ -63,9 +65,9 @@ export const FeaturesBento = () => {
               </div>
               <span className="text-xs text-muted-foreground">02</span>
             </div>
-            <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">Predictive Risk Engine</h3>
+            <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">{t("features.risk.title")}</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Flags expiring items and stockouts 72 hours in advance.
+              {t("features.risk.desc")}
             </p>
 
             <div className="mt-6 relative h-24 rounded-lg border border-border bg-background p-3">
@@ -86,9 +88,9 @@ export const FeaturesBento = () => {
               </div>
               <span className="text-xs text-muted-foreground">03</span>
             </div>
-            <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">Autonomous PO Generation</h3>
+            <h3 className="mt-6 text-xl font-semibold tracking-tight text-foreground">{t("features.po.title")}</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              AI drafts supplier orders for human-in-the-loop approval.
+              {t("features.po.desc")}
             </p>
 
             <div className="mt-6 rounded-lg border border-border bg-background p-3 text-xs">
