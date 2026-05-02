@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, RotateCcw, Sparkles } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n/I18nProvider";
+import { supabase } from "@/integrations/supabase/client";
 
 type Phase = "idle" | "running" | "resolved";
 
@@ -20,10 +22,35 @@ export const Sandbox = () => {
     if (timer.current) window.clearTimeout(timer.current);
   }, []);
 
-  const run = () => {
+  const run = async () => {
     if (phase !== "idle") return;
     setPhase("running");
-    timer.current = window.setTimeout(() => setPhase("resolved"), 1500);
+    try {
+      const { data: schedule } = await supabase
+        .from("surgical_schedule")
+        .select("required_sku")
+        .eq("surgeon_name", "Dr. Patel")
+        .maybeSingle();
+
+      const sku = schedule?.required_sku ?? "SKU-7782";
+
+      const { error: insertError } = await supabase
+        .from("purchase_orders")
+        .insert({
+          generated_for_sku: sku,
+          quantity_ordered: 3,
+          supplier: "Stryker",
+          status: "Drafted",
+        });
+
+      if (insertError) throw insertError;
+
+      setPhase("resolved");
+      toast.success(t("sandbox.toastSuccess"));
+    } catch (err) {
+      setPhase("idle");
+      toast.error(t("sandbox.toastError"));
+    }
   };
 
   const resolved = phase === "resolved";
@@ -108,9 +135,13 @@ export const Sandbox = () => {
                 <button
                   onClick={run}
                   disabled={running}
-                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-70"
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  <Sparkles className={cn("h-4 w-4", running && "animate-spin")} />
+                  {running ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-4 w-4" />
+                  )}
                   {running ? t("sandbox.running") : t("sandbox.run")}
                 </button>
               </>
