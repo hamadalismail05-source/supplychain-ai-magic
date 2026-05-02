@@ -123,6 +123,23 @@ const Dashboard = () => {
     await Promise.all([loadOrders(), loadSchedule()]);
   };
 
+  const reject = async (id: string) => {
+    setApprovingId(id);
+    const { error } = await supabase
+      .from("purchase_orders")
+      .update({ status: "Rejected" })
+      .eq("id", id);
+    setApprovingId(null);
+    if (error) {
+      toast.error("Failed to reject order");
+      return;
+    }
+    setPendingOrders((prev) => prev.filter((p) => p.id !== id));
+    toast.warning("PO Rejected. Alerting OR Coordinator for manual intervention.");
+  };
+
+  const lockedModule = () => toast.info("This module is locked in the current Beta preview.");
+
   const criticalCount = useMemo(
     () => schedule.filter((r) => r.status.toLowerCase().includes("critical") || r.status.toLowerCase().includes("risk")).length,
     [schedule]
@@ -147,15 +164,26 @@ const Dashboard = () => {
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = item.to === "/dashboard";
+            if (!active) {
+              return (
+                <button
+                  key={item.label}
+                  type="button"
+                  onClick={lockedModule}
+                  className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground text-left"
+                >
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </button>
+              );
+            }
             return (
               <NavLink
                 key={item.label}
                 to={item.to}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                  active
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  "bg-primary text-primary-foreground"
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -186,11 +214,20 @@ const Dashboard = () => {
                 type="text"
                 placeholder="Search SKU, surgeon, OR…"
                 className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    toast.info("Global search indexing in progress.");
+                    (e.target as HTMLInputElement).blur();
+                  }
+                }}
               />
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative h-9 w-9 inline-flex items-center justify-center rounded-lg border border-border hover:bg-secondary">
+            <button
+              onClick={() => toast.success("All alerts caught up.")}
+              className="relative h-9 w-9 inline-flex items-center justify-center rounded-lg border border-border hover:bg-secondary"
+            >
               <Bell className="h-4 w-4 text-muted-foreground" />
               {criticalCount > 0 && (
                 <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-danger text-[10px] font-semibold text-danger-foreground inline-flex items-center justify-center">
@@ -346,6 +383,7 @@ const Dashboard = () => {
                     pending
                     loading={approvingId === po.id}
                     onApprove={() => approve(po.id)}
+                    onReject={() => reject(po.id)}
                   />
                 ))
               )}
@@ -444,9 +482,10 @@ type ApprovalCardProps = {
   loading?: boolean;
   disabled?: boolean;
   onApprove: () => void;
+  onReject?: () => void;
 };
 
-const ApprovalCard = ({ title, sku, qty, supplier, reason, loading, disabled, onApprove }: ApprovalCardProps) => (
+const ApprovalCard = ({ title, sku, qty, supplier, reason, loading, disabled, onApprove, onReject }: ApprovalCardProps) => (
   <div className="rounded-lg border border-border bg-background p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
     <div className="flex items-start gap-3 min-w-0">
       <div className="h-9 w-9 rounded-lg bg-primary/10 text-primary inline-flex items-center justify-center shrink-0">
@@ -468,7 +507,11 @@ const ApprovalCard = ({ title, sku, qty, supplier, reason, loading, disabled, on
       </div>
     </div>
     <div className="flex items-center gap-2 shrink-0">
-      <button className="px-3 py-2 text-xs text-muted-foreground hover:text-foreground">
+      <button
+        onClick={onReject}
+        disabled={loading || disabled || !onReject}
+        className="px-3 py-2 text-xs text-muted-foreground hover:text-foreground disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         Reject
       </button>
       <button
