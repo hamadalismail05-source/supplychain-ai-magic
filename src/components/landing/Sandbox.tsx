@@ -33,28 +33,16 @@ export const Sandbox = () => {
     if (phase !== "idle") return;
     setPhase("running");
     try {
-      const { data: schedule } = await supabase
-        .from("surgical_schedule")
-        .select("required_sku")
-        .eq("surgeon_name", "Dr. Patel")
-        .maybeSingle();
-
-      const sku = schedule?.required_sku ?? "SKU-7782";
-
-      const { error: insertError } = await supabase
-        .from("purchase_orders")
-        .insert({
-          generated_for_sku: sku,
-          quantity_ordered: 3,
-          supplier: "Stryker",
-          status: "Drafted",
-        });
-
-      if (insertError) throw insertError;
+      const { data, error } = await supabase.functions.invoke("agent-resolution", {
+        body: { surgeon_name: "Dr. Patel" },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
       setPhase("resolved");
       toast.success(t("sandbox.toastSuccess"));
     } catch (err) {
+      console.error("agent-resolution failed:", err);
       setPhase("idle");
       toast.error(t("sandbox.toastError"));
     }
