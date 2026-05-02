@@ -10,8 +10,6 @@ export const Hero = () => {
       <div className="absolute inset-0 grid-bg pointer-events-none opacity-60" aria-hidden />
       <div className="absolute inset-x-0 top-0 h-[420px] bg-gradient-to-b from-background via-background to-transparent pointer-events-none" aria-hidden />
 
-      <LangToggle className="absolute top-20 right-4 sm:right-6 z-40" />
-
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="flex flex-col items-center text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground shadow-sm">
