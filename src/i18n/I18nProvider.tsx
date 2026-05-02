@@ -158,6 +158,8 @@ const ar: Dict = {
   "sandbox.running": "الوكيل يعالج…",
   "sandbox.toastSuccess": "تم إعداد أمر الشراء تلقائيًا وإرساله للموافقة",
   "sandbox.toastError": "تعذر إعداد أمر الشراء. حاول مرة أخرى.",
+  "sandbox.resetSim": "إعادة ضبط المحاكاة",
+  "sandbox.resetToast": "تمت إعادة ضبط المحاكاة",
   "sandbox.reset": "إعادة العرض",
   "sandbox.savedChip": "وفّرت 14,200 دولار · بدون تأخير",
   "sandbox.hint": "إنسان في الحلقة. لا يُرسل شيء دون موافقة.",
