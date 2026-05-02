@@ -1,73 +1,29 @@
 import { useEffect, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, Loader2, RotateCcw, Sparkles, Terminal } from "lucide-react";
+import { AlertTriangle, CheckCircle2, RotateCcw, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const SCRIPT = [
-  "› Scanning regional inventory network…",
-  "› Match found: sister facility OR-North · 3 units available.",
-  "› Drafting transfer + backup PO to Stryker (NET-30)…",
-  "› Notifying Dr. Patel's coordinator.",
-  "✓ Resolution complete in 11.4s.",
-];
+import { useI18n } from "@/i18n/I18nProvider";
 
 type Phase = "idle" | "running" | "resolved";
 
 export const Sandbox = () => {
+  const { t } = useI18n();
   const [phase, setPhase] = useState<Phase>("idle");
-  const [lines, setLines] = useState<string[]>([]);
-  const [typed, setTyped] = useState("");
-  const timers = useRef<number[]>([]);
-
-  const reduce = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const timer = useRef<number | null>(null);
 
   const reset = () => {
-    timers.current.forEach((t) => clearTimeout(t));
-    timers.current = [];
+    if (timer.current) window.clearTimeout(timer.current);
+    timer.current = null;
     setPhase("idle");
-    setLines([]);
-    setTyped("");
   };
 
-  useEffect(() => () => timers.current.forEach((t) => clearTimeout(t)), []);
+  useEffect(() => () => {
+    if (timer.current) window.clearTimeout(timer.current);
+  }, []);
 
   const run = () => {
     if (phase !== "idle") return;
     setPhase("running");
-    setLines([]);
-    setTyped("");
-
-    if (reduce) {
-      setLines(SCRIPT);
-      const t = window.setTimeout(() => setPhase("resolved"), 600);
-      timers.current.push(t);
-      return;
-    }
-
-    let lineIdx = 0;
-    let charIdx = 0;
-
-    const tick = () => {
-      if (lineIdx >= SCRIPT.length) {
-        const t = window.setTimeout(() => setPhase("resolved"), 400);
-        timers.current.push(t);
-        return;
-      }
-      const current = SCRIPT[lineIdx];
-      if (charIdx <= current.length) {
-        setTyped(current.slice(0, charIdx));
-        charIdx++;
-        const t = window.setTimeout(tick, 22);
-        timers.current.push(t);
-      } else {
-        setLines((prev) => [...prev, current]);
-        setTyped("");
-        lineIdx++;
-        charIdx = 0;
-        const t = window.setTimeout(tick, 280);
-        timers.current.push(t);
-      }
-    };
-    tick();
+    timer.current = window.setTimeout(() => setPhase("resolved"), 1500);
   };
 
   const resolved = phase === "resolved";
@@ -77,12 +33,12 @@ export const Sandbox = () => {
     <section className="relative py-24 sm:py-32 bg-secondary/30 border-y border-border">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto">
-          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Try it out</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{t("sandbox.kicker")}</span>
           <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-foreground text-balance">
-            Experience the Agent.
+            {t("sandbox.title")}
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            A simulation of a live risk on today's schedule. Click run and watch the agent resolve it.
+            {t("sandbox.sub")}
           </p>
         </div>
 
@@ -90,19 +46,19 @@ export const Sandbox = () => {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
             <div>
-              <div className="text-xs font-mono text-muted-foreground">OR-4 · 09:30 · Dr. Patel</div>
-              <div className="text-base font-semibold text-foreground mt-0.5">Total Hip Arthroplasty</div>
+              <div className="text-xs font-mono text-muted-foreground" dir="ltr">OR-4 · 09:30 · Dr. Patel</div>
+              <div className="text-base font-semibold text-foreground mt-0.5">{t("sandbox.case")}</div>
             </div>
             {resolved ? (
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1 text-xs font-medium text-success">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Resolved · PO Drafted
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1 text-xs font-medium text-success animate-fade-up">
+                <CheckCircle2 className="h-3.5 w-3.5" /> {t("sandbox.resolvedBadge")}
               </span>
             ) : (
               <span className={cn(
                 "inline-flex items-center gap-1.5 rounded-full bg-danger-soft px-3 py-1 text-xs font-medium text-danger",
                 !running && "animate-pulse-ring"
               )}>
-                <AlertTriangle className="h-3.5 w-3.5" /> Critical Risk · Missing implant
+                <AlertTriangle className="h-3.5 w-3.5" /> {t("sandbox.criticalBadge")}
               </span>
             )}
           </div>
@@ -120,57 +76,42 @@ export const Sandbox = () => {
                   <span className="h-2 w-2 rounded-full bg-danger" />
                 )}
                 <div>
-                  <div className="text-sm font-medium text-foreground">Titanium Femoral Stem · Size 12</div>
+                  <div className="text-sm font-medium text-foreground">{t("sandbox.itemTitle")}</div>
                   <div className="text-xs text-muted-foreground mt-0.5">
-                    {resolved ? "3 units inbound from OR-North · backup PO #4471 drafted" : "0 in stock · supplier lead 48h"}
+                    {resolved ? t("sandbox.itemResolvedDesc") : t("sandbox.itemRiskDesc")}
                   </div>
                 </div>
               </div>
-              <span className="text-xs font-mono text-muted-foreground">SKU-7782</span>
+              <span className="text-xs font-mono text-muted-foreground" dir="ltr">SKU-7782</span>
             </div>
           </div>
-
-          {/* Console */}
-          {(running || resolved) && (
-            <div className="px-5 py-4 border-b border-border bg-secondary/40">
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                <Terminal className="h-3.5 w-3.5" /> Agent trace
-              </div>
-              <div className="font-mono text-[13px] leading-6 text-foreground/80 space-y-0.5 min-h-[120px]">
-                {lines.map((l, i) => (
-                  <div key={i} className={l.startsWith("✓") ? "text-success" : ""}>{l}</div>
-                ))}
-                {running && typed && <div className="caret-blink">{typed}</div>}
-              </div>
-            </div>
-          )}
 
           {/* Footer */}
           <div className="flex items-center justify-between gap-3 px-5 py-4">
             {resolved ? (
               <>
                 <span className="inline-flex items-center gap-2 rounded-full bg-success-soft px-3 py-1.5 text-xs font-medium text-success">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> Saved $14,200 · 0 surgery delay
+                  <CheckCircle2 className="h-3.5 w-3.5" /> {t("sandbox.savedChip")}
                 </span>
                 <button
                   onClick={reset}
                   className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <RotateCcw className="h-3.5 w-3.5" /> Reset demo
+                  <RotateCcw className="h-3.5 w-3.5" /> {t("sandbox.reset")}
                 </button>
               </>
             ) : (
               <>
                 <div className="text-xs text-muted-foreground">
-                  {running ? "Agent is working…" : "Human-in-the-loop. Nothing is sent without approval."}
+                  {running ? t("sandbox.running") : t("sandbox.hint")}
                 </div>
                 <button
                   onClick={run}
                   disabled={running}
                   className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-70"
                 >
-                  {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-                  {running ? "Resolving…" : "Run AI Resolution"}
+                  <Sparkles className={cn("h-4 w-4", running && "animate-spin")} />
+                  {running ? t("sandbox.running") : t("sandbox.run")}
                 </button>
               </>
             )}
