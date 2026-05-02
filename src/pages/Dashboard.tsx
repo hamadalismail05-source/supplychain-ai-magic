@@ -1,27 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
 import {
   Activity,
   AlertOctagon,
-  Bell,
-  Bot,
-  Boxes,
   CalendarDays,
   CheckCircle2,
-  ChevronRight,
-  LayoutDashboard,
   Loader2,
   PackageCheck,
-  Search,
-  Settings,
   ShieldAlert,
   Sparkles,
   TrendingUp,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/landing/Logo";
 import { supabase } from "@/integrations/supabase/client";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 
 type ScheduleRow = {
   id: string;
@@ -40,14 +32,6 @@ type PendingOrder = {
   status: string;
   created_at: string;
 };
-
-const navItems = [
-  { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { label: "OR Schedule", to: "/dashboard?tab=schedule", icon: CalendarDays },
-  { label: "Inventory", to: "/dashboard?tab=inventory", icon: Boxes },
-  { label: "AI Agents", to: "/dashboard?tab=agents", icon: Bot },
-  { label: "Settings", to: "/dashboard?tab=settings", icon: Settings },
-];
 
 const statusStyle = (status: string) => {
   const s = status.toLowerCase();
@@ -138,7 +122,6 @@ const Dashboard = () => {
     toast.warning("PO Rejected. Alerting OR Coordinator for manual intervention.");
   };
 
-  const lockedModule = () => toast.info("This module is locked in the current Beta preview.");
 
   const criticalCount = useMemo(
     () => schedule.filter((r) => r.status.toLowerCase().includes("critical") || r.status.toLowerCase().includes("risk")).length,
@@ -154,100 +137,7 @@ const Dashboard = () => {
   const fallbackPending = pendingOrders.length === 0;
 
   return (
-    <div className="min-h-screen bg-secondary/30 flex">
-      {/* Sidebar */}
-      <aside className="hidden md:flex w-60 shrink-0 flex-col border-r border-border bg-card">
-        <Link to="/" className="h-16 flex items-center px-5 border-b border-border hover:bg-secondary/50 transition-colors">
-          <Logo asLink={false} />
-        </Link>
-        <nav className="flex-1 p-3 space-y-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const active = item.to === "/dashboard";
-            if (!active) {
-              return (
-                <button
-                  key={item.label}
-                  type="button"
-                  onClick={lockedModule}
-                  className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors text-muted-foreground hover:bg-secondary hover:text-foreground text-left"
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </button>
-              );
-            }
-            return (
-              <NavLink
-                key={item.label}
-                to={item.to}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
-                  "bg-primary text-primary-foreground"
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {item.label}
-              </NavLink>
-            );
-          })}
-        </nav>
-        <div className="p-3 border-t border-border">
-          <Link
-            to="/"
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <ChevronRight className="h-3 w-3 rotate-180" />
-            Back to site
-          </Link>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Topbar */}
-        <header className="h-16 border-b border-border bg-card flex items-center justify-between px-4 sm:px-6">
-          <div className="flex items-center gap-3 flex-1 max-w-md">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search SKU, surgeon, OR…"
-                className="w-full rounded-lg border border-border bg-background pl-9 pr-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    toast.info("Global search indexing in progress.");
-                    (e.target as HTMLInputElement).blur();
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => toast.success("All alerts caught up.")}
-              className="relative h-9 w-9 inline-flex items-center justify-center rounded-lg border border-border hover:bg-secondary"
-            >
-              <Bell className="h-4 w-4 text-muted-foreground" />
-              {criticalCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-4 min-w-4 px-1 rounded-full bg-danger text-[10px] font-semibold text-danger-foreground inline-flex items-center justify-center">
-                  {criticalCount}
-                </span>
-              )}
-            </button>
-            <div className="flex items-center gap-2 pl-3 border-l border-border">
-              <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground inline-flex items-center justify-center text-xs font-semibold">
-                AS
-              </div>
-              <div className="hidden sm:block">
-                <div className="text-xs font-medium text-foreground">Admin · St. Mary's</div>
-                <div className="text-[10px] text-muted-foreground">Hospital Administrator</div>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <main className="flex-1 p-4 sm:p-6 space-y-6 overflow-x-hidden">
+    <DashboardLayout alertCount={criticalCount}>
           {/* Heading */}
           <div className="flex items-end justify-between flex-wrap gap-2">
             <div>
@@ -466,9 +356,7 @@ const Dashboard = () => {
               </table>
             </div>
           </section>
-        </main>
-      </div>
-    </div>
+    </DashboardLayout>
   );
 };
 
