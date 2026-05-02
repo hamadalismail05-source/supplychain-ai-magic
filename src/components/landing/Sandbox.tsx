@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { AlertTriangle, CheckCircle2, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, RefreshCw, RotateCcw, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -12,10 +12,17 @@ export const Sandbox = () => {
   const [phase, setPhase] = useState<Phase>("idle");
   const timer = useRef<number | null>(null);
 
-  const reset = () => {
+  const reset = async () => {
     if (timer.current) window.clearTimeout(timer.current);
     timer.current = null;
     setPhase("idle");
+    // Clean up any PO rows created by this simulation
+    await supabase
+      .from("purchase_orders")
+      .delete()
+      .eq("generated_for_sku", "SKU-7782")
+      .eq("supplier", "Stryker");
+    toast.success(t("sandbox.resetToast"));
   };
 
   useEffect(() => () => {
@@ -147,6 +154,17 @@ export const Sandbox = () => {
               </>
             )}
           </div>
+        </div>
+
+        <div className="mt-4 flex justify-center">
+          <button
+            onClick={reset}
+            disabled={running}
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-50"
+          >
+            <RefreshCw className="h-3 w-3" />
+            {t("sandbox.resetSim")}
+          </button>
         </div>
       </div>
     </section>
