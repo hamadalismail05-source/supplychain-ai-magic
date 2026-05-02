@@ -17,18 +17,24 @@ export type Database = {
       waitlist: {
         Row: {
           created_at: string
+          full_name: string | null
+          hospital: string | null
           id: string
           locale: string
           whatsapp_number: string
         }
         Insert: {
           created_at?: string
+          full_name?: string | null
+          hospital?: string | null
           id?: string
           locale?: string
           whatsapp_number: string
         }
         Update: {
           created_at?: string
+          full_name?: string | null
+          hospital?: string | null
           id?: string
           locale?: string
           whatsapp_number?: string
