@@ -20,7 +20,7 @@ export const LangToggle = ({ className }: { className?: string }) => {
         className={cn(
           "uppercase tracking-wider transition-colors",
           lang === "en"
-            ? "font-semibold text-[#059669]"
+            ? "font-semibold text-foreground"
             : "font-medium text-slate-400 hover:text-slate-600"
         )}
       >
@@ -34,7 +34,7 @@ export const LangToggle = ({ className }: { className?: string }) => {
         className={cn(
           "uppercase tracking-wider transition-colors",
           lang === "ar"
-            ? "font-semibold text-[#059669]"
+            ? "font-semibold text-foreground"
             : "font-medium text-slate-400 hover:text-slate-600"
         )}
       >
