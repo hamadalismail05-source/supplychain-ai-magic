@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import OrSchedule from "./pages/OrSchedule.tsx";
 import Inventory from "./pages/Inventory.tsx";
+import Pitch from "./pages/Pitch.tsx";
 import { I18nProvider } from "@/i18n/I18nProvider";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,8 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/or-schedule" element={<OrSchedule />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/pitch" element={<Pitch />} />
+            <Route path="/qa" element={<Pitch />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
