@@ -1,149 +1,83 @@
-import { useState, useRef, useEffect } from "react";
+import { Bot, ArrowLeft, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Bot, Send, ArrowLeft, Sparkles } from "lucide-react";
-
-type Msg = { role: "ai" | "user"; text: string };
-
-const INITIAL: Msg = {
-  role: "ai",
-  text:
-    "مرحباً! أنا الوكيل الذكي لـ The Inventory Oracle. يمكنني إجابتكم على أي تفاصيل تخص دراسة السوق، فريقنا (حمد وولاء والوكلاء الرقميين)، التقنية المستخدمة، أو خطط التوسع. تفضلوا بطرح أسئلتكم.",
-};
 
 const Pitch = () => {
-  const [messages, setMessages] = useState<Msg[]>([INITIAL]);
-  const [input, setInput] = useState("");
-  const [thinking, setThinking] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, thinking]);
-
-  const send = () => {
-    const text = input.trim();
-    if (!text || thinking) return;
-    setMessages((m) => [...m, { role: "user", text }]);
-    setInput("");
-    setThinking(true);
-    setTimeout(() => {
-      setMessages((m) => [
-        ...m,
-        {
-          role: "ai",
-          text:
-            "شكراً على سؤالكم. هذه نسخة عرض تجريبية للوكيل الذكي. سيتم ربطها قريباً بنموذج لغوي متقدم للإجابة بتفصيل عن دراسة السوق والفريق والتقنية وخطط التوسع.",
-        },
-      ]);
-      setThinking(false);
-    }, 1400);
-  };
-
   return (
     <div
       dir="rtl"
       lang="ar"
-      className="min-h-screen bg-background text-foreground"
+      className="min-h-screen bg-slate-900 text-slate-100"
+      style={{ fontFamily: "'Cairo', sans-serif" }}
     >
-      <div className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
+      <div className="mx-auto max-w-6xl px-6 py-14 sm:py-20">
         {/* Header */}
-        <header className="mb-10 text-center">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-success/30 bg-success-soft px-4 py-1.5 text-xs font-medium text-success">
-            <Sparkles className="h-3.5 w-3.5" />
+        <header className="mb-14 text-center">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold text-emerald-400">
             عرض لجنة التحكيم
           </div>
-          <h1 className="text-3xl font-extrabold leading-tight text-foreground sm:text-5xl">
+          <h1 className="text-3xl font-extrabold leading-tight text-white sm:text-5xl">
             مرحباً بلجنة التحكيم في{" "}
-            <span className="text-success">The Inventory Oracle</span>
+            <span className="text-emerald-500">The Inventory Oracle</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            استكشفوا مستقبل سلاسل الإمداد الطبية. يمكنكم تصفح النظام الحي أو طرح
-            أسئلتكم على وكيلنا الذكي هنا.
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+            استكشفوا مستقبل سلاسل الإمداد الطبية. تصفحوا النظام الحي أو اطرحوا
+            أسئلتكم على وكيلنا الذكي أدناه.
           </p>
-          <div className="mt-8">
+          <div className="mt-10">
             <Link
-              to="/"
-              className="inline-flex items-center gap-3 rounded-xl bg-primary px-8 py-4 text-base font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 sm:text-lg"
+              to="/dashboard"
+              className="inline-flex items-center gap-3 rounded-xl bg-emerald-500 px-8 py-4 text-base font-bold text-slate-900 shadow-lg shadow-emerald-500/30 transition-all hover:bg-emerald-400 hover:shadow-emerald-500/50 sm:text-lg"
             >
               <ArrowLeft className="h-5 w-5" />
-              تصفح الموقع الكامل (Check Out the Full Website)
+              الدخول إلى النظام الحي (Live Demo)
             </Link>
           </div>
         </header>
 
-        {/* Chat */}
-        <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
-          <div className="flex items-center gap-3 border-b border-border bg-secondary/40 px-6 py-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-success-soft text-success">
-              <Bot className="h-5 w-5" />
+        {/* Chatbase */}
+        <section className="mb-16">
+          <div className="mb-6 flex items-center justify-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400">
+              <Bot className="h-6 w-6" />
             </div>
-            <div>
-              <h2 className="text-base font-bold text-foreground">الوكيل الذكي الاستثماري</h2>
-              <p className="text-xs text-muted-foreground">متصل · جاهز للإجابة على أسئلتكم</p>
-            </div>
-            <span className="mr-auto inline-flex h-2.5 w-2.5 rounded-full bg-success shadow-[0_0_10px] shadow-success/60" />
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              اسأل وكيلنا الذكي الاستثماري
+            </h2>
           </div>
-
-          <div ref={scrollRef} className="h-[440px] space-y-4 overflow-y-auto bg-background/40 px-6 py-6">
-            {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex ${m.role === "user" ? "justify-start" : "justify-end"}`}
-              >
-                <div
-                  className={`max-w-[78%] rounded-2xl px-5 py-3 text-sm leading-relaxed sm:text-base ${
-                    m.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground border border-border"
-                  }`}
-                >
-                  {m.text}
-                </div>
-              </div>
-            ))}
-            {thinking && (
-              <div className="flex justify-end">
-                <div className="rounded-2xl border border-border bg-secondary px-5 py-3 text-sm text-muted-foreground">
-                  <span className="inline-flex items-center gap-2">
-                    جاري التفكير
-                    <span className="flex gap-1">
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-success [animation-delay:-0.3s]" />
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-success [animation-delay:-0.15s]" />
-                      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-success" />
-                    </span>
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="border-t border-border bg-secondary/40 px-4 py-4 sm:px-6">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                send();
-              }}
-              className="flex items-center gap-3"
-            >
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="اسأل وكيلنا هنا..."
-                className="flex-1 rounded-xl border border-input bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-success focus:outline-none focus:ring-2 focus:ring-success/30 sm:text-base"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || thinking}
-                className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-success text-success-foreground transition-colors hover:bg-success/90 disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="إرسال"
-              >
-                <Send className="h-5 w-5 -scale-x-100" />
-              </button>
-            </form>
+          <div className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 p-2 shadow-2xl shadow-emerald-500/10 sm:p-4">
+            <iframe
+              src="https://www.chatbase.co/chatbot-iframe/dwfu5ThHvvg2OavZeioSp"
+              width="100%"
+              style={{ height: "100%", minHeight: 700 }}
+              frameBorder="0"
+              allow="microphone"
+            ></iframe>
           </div>
         </section>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
+        {/* Team */}
+        <section className="rounded-2xl border border-slate-700 bg-slate-800 p-8 sm:p-10">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400">
+              <Users className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="mb-3 text-xl font-bold text-white sm:text-2xl">
+                الفريق الهجين
+              </h3>
+              <p className="text-base leading-relaxed text-slate-300 sm:text-lg">
+                <span className="font-semibold text-emerald-400">حمد وولاء</span>{" "}
+                (المؤسسون) جنباً إلى جنب مع فريق من{" "}
+                <span className="font-semibold text-emerald-400">
+                  الوكلاء الرقميين
+                </span>{" "}
+                لمهام البرمجة والبحث والعمليات.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <p className="mt-10 text-center text-xs text-slate-500">
           The Inventory Oracle © 2026 · جميع الحقوق محفوظة
         </p>
       </div>
