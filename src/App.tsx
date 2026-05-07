@@ -10,6 +10,7 @@ import OrSchedule from "./pages/OrSchedule.tsx";
 import Inventory from "./pages/Inventory.tsx";
 import Pitch from "./pages/Pitch.tsx";
 import { I18nProvider } from "@/i18n/I18nProvider";
+import { ClientLoginGate } from "@/components/auth/ClientLoginGate";
 
 const queryClient = new QueryClient();
 
@@ -22,9 +23,9 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/or-schedule" element={<OrSchedule />} />
-            <Route path="/inventory" element={<Inventory />} />
+            <Route path="/dashboard" element={<ClientLoginGate><Dashboard /></ClientLoginGate>} />
+            <Route path="/or-schedule" element={<ClientLoginGate><OrSchedule /></ClientLoginGate>} />
+            <Route path="/inventory" element={<ClientLoginGate><Inventory /></ClientLoginGate>} />
             <Route path="/pitch" element={<Pitch />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
